@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAZR Web — Detección de Somnolencia (Tailwind UI)</title>
+
+  <!-- Tailwind CSS CDN (para prototipo) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- MediaPipe Face Mesh y utilidades (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/face_mesh.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
+  <!-- Chart.js para gráfico temporal e histograma -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <style>
+    /* Estilos complementarios para apariencia tipo HUD */
+    body { background: #0b1020; color: #E6F7FF; }
+    .glass {
+      background: rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255,255,255,0.04);
+    }
+    canvas { image-rendering: optimizeSpeed; }
+  </style>
+</head>
+<body class="min-h-screen flex items-start justify-center p-6">
+
+  <div class="w-full max-w-6xl">
+
+    <header class="mb-4">
+      <h1 class="text-2xl font-semibold text-cyan-400">RAZR — Detector de Somnolencia (Web)</h1>
+      <p class="text-sm text-gray-300">Versión experimental. Ajuste parámetros y observe resultados en tiempo real.</p>
+    </header>
+
+    <main class="grid grid-cols-12 gap-4">
+
+      <!-- PANEL VIDEO + OVERLAY -->
+      <section class="col-span-8 glass rounded-lg p-4">
+        <div class="flex items-center justify-between mb-2">
+          <div>
+            <span class="text-xs text-gray-300">Cámara</span>
+            <div id="statusCamera" class="text-sm text-green-300">Inicializando cámara...</div>
+          </div>
+          <div class="flex gap-2 items-center">
+            <button id="btnStart" class="px-3 py-1 bg-cyan-600 rounded text-black text-sm">Iniciar</button>
+            <button id="btnStop" class="px-3 py-1 bg-gray-700 rounded text-sm">Detener</button>
+            <button id="btnSnapshot" class="px-3 py-1 bg-yellow-500 rounded text-black text-sm">Snapshot</button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <!-- video (oculto) y canvas para dibujo -->
+          <video id="video" class="hidden" playsinline></video>
+          <canvas id="canvas" width="960" height="540" class="w-full rounded-lg border border-white/5"></canvas>
+
+          <!-- Indicadores superpuestos -->
+          <div class="absolute top-3 left-3 bg-black/40 px-3 py-1 rounded text-xs">
+            <div id="earDisplay">EAR: --</div>
+            <div id="fpsDisplay">FPS: --</div>
+          </div>
+
+          <div class="absolute top-3 right-3 bg-black/40 px-3 py-1 rounded text-xs">
+            <div id="alertText" class="text-red-400 font-semibold"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- PANEL CONTROL / GRAFICOS -->
+      <aside class="col-span-4 space-y-4">
+
+        <!-- CONTROLES -->
+        <div class="glass p-4 rounded-lg">
+          <h2 class="text-sm font-medium text-cyan-300 mb-2">Parámetros (configurables)</h2>
+
+          <div class="space-y-3 text-sm text-gray-200">
+
+            <div>
+              <label class="block text-xs text-gray-300">Umbral EAR</label>
+              <input id="inputEAR" type="number" step="0.01" min="0.05" max="0.4" value="0.18"
+                     class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white"/>
+              <p class="text-xs text-gray-400 mt-1">EAR por debajo de este valor se considera ojo cerrado.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Tiempo de alarma (seg)</label>
+              <input id="inputTimeAlarm" type="number" step="0.1" min="0.1" max="10" value="1.5"
+                     class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white"/>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Duración alarma (seg)</label>
+              <input id="inputAlarmDuration" type="number" step="0.1" min="0.1" max="10" value="3"
+                     class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white"/>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Modo Landmarks</label>
+              <select id="selectLandmarkMode" class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white">
+                <option value="polygons" selected>Polígonos oculares (rápido)</option>
+                <option value="468">468 Landmarks (preciso)</option>
+              </select>
+              <p class="text-xs text-gray-400 mt-1">Seleccione precisión vs rendimiento.</p>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Mostrar puntos</label>
+              <div class="flex items-center gap-2 mt-1">
+                <input id="chkShowPoints" type="checkbox" class="h-4 w-4" />
+                <label class="text-xs text-gray-400">Mostrar puntos individuales (si modo 468)</label>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Muestreo (procesar cada N frames)</label>
+              <input id="inputFrameStep" type="number" step="1" min="1" max="10" value="1"
+                     class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white"/>
+              <p class="text-xs text-gray-400 mt-1">Aumente para reducir carga (mejorar velocidad a costa de precisión).</p>
+            </div>
+
+            <div>
+              <label class="block text-xs text-gray-300">Histograma (mostrar)</label>
+              <div class="flex items-center gap-2 mt-1">
+                <input id="chkShowHistogram" type="checkbox" checked class="h-4 w-4" />
+                <button id="btnToggleHist" class="ml-auto px-2 py-1 bg-slate-700 rounded text-xs">Minimizar</button>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <label class="block text-xs text-gray-300">Velocidad/Optimización</label>
+              <select id="selectPerf" class="w-full mt-1 p-2 rounded bg-black/30 border border-white/5 text-white">
+                <option value="balanced" selected>Balanced (predeterminado)</option>
+                <option value="fast">Fast (menor latencia, menos suavizado)</option>
+                <option value="accurate">Accurate (mayor calidad, más carga)</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- GRAFICOS -->
+        <div id="panelCharts" class="glass p-3 rounded-lg">
+          <h3 class="text-xs text-cyan-300 mb-2">Gráficos</h3>
+
+          <div id="graficoTemporalArea" class="mb-3">
+            <canvas id="chartTime" width="400" height="160"></canvas>
+          </div>
+
+          <div id="histogramaArea" class="mb-3">
+            <canvas id="chartHist" width="400" height="160"></canvas>
+          </div>
+
+          <div class="text-xs text-gray-400">Los gráficos muestran EAR en tiempo real (eje X en segundos desde inicio experimental).</div>
+        </div>
+
+      </aside>
+
+    </main>
+
+    <footer class="mt-6 text-xs text-gray-400">
+      <div>Diseño experimental — MediaPipe FaceMesh CDN — Web Audio API</div>
+    </footer>
+  </div>
+
+  <!-- ===========================
+       SCRIPT PRINCIPAL
+       =========================== -->
+  <script>
+  'use strict';
+
+  /**************************************************************************
+   * Variables y estado experimental
+   **************************************************************************/
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  const earDisplay = document.getElementById('earDisplay');
+  const fpsDisplay = document.getElementById('fpsDisplay');
+  const alertText = document.getElementById('alertText');
+  const statusCamera = document.getElementById('statusCamera');
+
+  // Controles UI
+  const inputEAR = document.getElementById('inputEAR');
+  const inputTimeAlarm = document.getElementById('inputTimeAlarm');
+  const inputAlarmDuration = document.getElementById('inputAlarmDuration');
+  const selectLandmarkMode = document.getElementById('selectLandmarkMode');
+  const chkShowPoints = document.getElementById('chkShowPoints');
+  const inputFrameStep = document.getElementById('inputFrameStep');
+  const chkShowHistogram = document.getElementById('chkShowHistogram');
+  const btnToggleHist = document.getElementById('btnToggleHist');
+  const selectPerf = document.getElementById('selectPerf');
+
+  const btnStart = document.getElementById('btnStart');
+  const btnStop = document.getElementById('btnStop');
+  const btnSnapshot = document.getElementById('btnSnapshot');
+
+  // Parámetros de comportamiento
+  let UMBRAL_EAR = parseFloat(inputEAR.value);
+  let TIEMPO_UMBRAL_MS = parseFloat(inputTimeAlarm.value) * 1000;
+  let DURACION_ALARMA_MS = parseFloat(inputAlarmDuration.value) * 1000;
+  let FRAME_STEP = parseInt(inputFrameStep.value, 10) || 1;
+  let SHOW_POINTS = chkShowPoints.checked;
+  let LANDMARK_MODE = selectLandmarkMode.value; // 'polygons' | '468'
+  let SHOW_HIST = chkShowHistogram.checked;
+
+  // Estado de detección
+  let tiempoInicioCierre = null;
+  let alarmaActiva = false;
+  let tiempoInicioAlarma = null;
+
+  // Buffer temporal para graficos (tiempo en segundos desde inicio)
+  const maxSamples = 300;
+  const bufferTime = [];
+  const bufferEAR = [];
+
+  // Variables rendimiento
+  let lastFrameTime = performance.now();
+  let fps = 0;
+  let frameCounter = 0;
+  let processCounter = 0;
+
+  // Audio (alarma) — Web Audio API
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let alarmOsc = null;
+
+  function playAlarm(durationMs) {
+    if (alarmaActiva) return;
+    alarmaActiva = true;
+    alarmOsc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    alarmOsc.type = 'sine';
+    alarmOsc.frequency.setValueAtTime(880, audioCtx.currentTime);
+    alarmOsc.connect(gain);
+    gain.connect(audioCtx.destination);
+    gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.2, audioCtx.currentTime + 0.02);
+    alarmOsc.start();
+    alertText.textContent = '⚠️ ALERTA: SOMNOLENCIA ⚠️';
+    tiempoInicioAlarma = performance.now();
+    setTimeout(stopAlarm, durationMs);
+  }
+
+  function stopAlarm() {
+    if (!alarmaActiva) return;
+    try {
+      alarmOsc.stop();
+      alarmOsc.disconnect();
+    } catch (e) { /* ignore */ }
+    alarmaActiva = false;
+    alarmOsc = null;
+    alertText.textContent = '';
+  }
+
+  /**************************************************************************
+   * Chart.js: gráfico temporal y histograma
+   **************************************************************************/
+  const ctxTime = document.getElementById('chartTime').getContext('2d');
+  const timeChart = new Chart(ctxTime, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'EAR (temporal)',
+        data: [],
+        borderColor: '#06b6d4',
+        backgroundColor: 'rgba(6,182,212,0.12)',
+        tension: 0.15,
+        pointRadius: 0
+      }]
+    },
+    options: {
+      animation: false,
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: {
+          type: 'linear',
+          title: { display: false },
+          ticks: { display: false }
+        },
+        y: {
+          min: 0,
+          max: 0.45
+        }
+      }
+    }
+  });
+
+  const ctxHist = document.getElementById('chartHist').getContext('2d');
+  const histChart = new Chart(ctxHist, {
+    type: 'bar',
+    data: { labels: [], datasets: [{ label: 'Frecuencia EAR', data: [], backgroundColor: 'rgba(99,102,241,0.7)' }] },
+    options: { animation: false, plugins: { legend: { display: false } }, scales: { x: { title: { display: true, text: 'Bins EAR' } } } }
+  });
+
+  function updateCharts(timestampSec, earValue) {
+    // Temporal (tiempo absoluto en segundos desde inicio registro)
+    if (timeChart.data.labels.length >= maxSamples) {
+      timeChart.data.labels.shift();
+      timeChart.data.datasets[0].data.shift();
+    }
+    timeChart.data.labels.push(timestampSec);
+    timeChart.data.datasets[0].data.push({ x: timestampSec, y: earValue });
+    timeChart.update('none');
+
+    // Histograma: crear bins
+    if (SHOW_HIST) {
+      const nBins = 20;
+      const minV = 0.0, maxV = 0.45;
+      const bins = new Array(nBins).fill(0);
+      for (let v of bufferEAR) {
+        let idx = Math.floor(((v - minV) / (maxV - minV)) * nBins);
+        if (idx < 0) idx = 0;
+        if (idx >= nBins) idx = nBins - 1;
+        bins[idx]++;
+      }
+      histChart.data.labels = Array.from({length: nBins}, (_,i)=> ( (minV + (i*(maxV-minV)/nBins)).toFixed(2) ));
+      histChart.data.datasets[0].data = bins;
+      histChart.update('none');
+    }
+  }
+
+  // Minimizar / maximizar histograma
+  btnToggleHist.addEventListener('click', () => {
+    const area = document.getElementById('histogramaArea');
+    if (area.style.display === 'none') {
+      area.style.display = 'block';
+      btnToggleHist.textContent = 'Minimizar';
+    } else {
+      area.style.display = 'none';
+      btnToggleHist.textContent = 'Maximizar';
+    }
+  });
+
+  /**************************************************************************
+   * MediaPipe FaceMesh y cámara
+   **************************************************************************/
+  const faceMesh = new FaceMesh({
+    locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4/${file}`
+  });
+
+  // Ajustes iniciales; se actualizarán según selectPerf
+  faceMesh.setOptions({
+    maxNumFaces: 1,
+    refineLandmarks: true,
+    minDetectionConfidence: 0.5,
+    minTrackingConfidence: 0.5
+  });
+
+  // Landmark indices para ojos (el mismo que en Python)
+  const L_OJO_IZQ = [33,160,158,133,153,144];
+  const L_OJO_DER = [362,385,387,263,373,380];
+
+  // Helper: calcular EAR dadas coordenadas normalizadas (x,y)
+  function calcularEARFromLandmarks(points) {
+    // points: array length 6 of landmarks {x,y}
+    function dist(a,b) { return Math.hypot(a.x - b.x, a.y - b.y); }
+    const A = dist(points[1], points[5]);
+    const B = dist(points[2], points[4]);
+    const C = dist(points[0], points[3]);
+    if (C === 0) return 0;
+    return (A + B) / (2.0 * C);
+  }
+
+  // Optimización del pipeline: procesar cada FRAME_STEP fotogramas
+  let camera = null;
+
+  async function startCameraAndProcessing() {
+    // Inicializar cámara con Camera util de MediaPipe
+    try {
+      camera = new Camera(video, {
+        onFrame: async () => {
+          await faceMesh.send({image: video});
+        },
+        width: 960,
+        height: 540
+      });
+      await camera.start();
+      statusCamera.textContent = "Cámara activa";
+    } catch (e) {
+      statusCamera.textContent = "Error cámara: " + e.message;
+      console.error(e);
+    }
+  }
+
+  // Ajustes de rendimiento según selectPerf
+  function applyPerfMode(mode) {
+    if (mode === 'fast') {
+      faceMesh.setOptions({minDetectionConfidence: 0.4, minTrackingConfidence: 0.4, refineLandmarks: false});
+    } else if (mode === 'accurate') {
+      faceMesh.setOptions({minDetectionConfidence: 0.7, minTrackingConfidence: 0.7, refineLandmarks: true});
+    } else { // balanced
+      faceMesh.setOptions({minDetectionConfidence: 0.55, minTrackingConfidence: 0.55, refineLandmarks: true});
+    }
+  }
+
+  // onResults callback
+  faceMesh.onResults((results) => {
+    frameCounter++;
+    const now = performance.now();
+    const dt = now - lastFrameTime;
+    if (dt > 0) fps = 1000 / dt;
+    lastFrameTime = now;
+    fpsDisplay.textContent = `FPS: ${fps.toFixed(1)}`;
+
+    // Clear canvas and draw image
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(results.image, 0, 0, canvas.width, canvas.height);
+
+    // Decide whether procesar (muestreo)
+    processCounter++;
+    if ((processCounter % FRAME_STEP) !== 0) {
+      // still draw landmarks if desired? skip heavy calculations
+      return;
+    }
+
+    if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+      const landmarks = results.multiFaceLandmarks[0];
+
+      // Selección de modo: polígonos o 468
+      let earVal = 0;
+      if (LANDMARK_MODE === '468') {
+        // Si el usuario solicita 468 puntos, calcular EAR con puntos exactos
+        const left = L_OJO_IZQ.map(i => landmarks[i]);
+        const right = L_OJO_DER.map(i => landmarks[i]);
+        const earL = calcularEARFromLandmarks(left);
+        const earR = calcularEARFromLandmarks(right);
+        earVal = (earL + earR) / 2.0;
+
+        // Opcional: mostrar puntos individuales
+        if (SHOW_POINTS) {
+          ctx.fillStyle = 'rgba(6,182,212,0.9)';
+          for (let i = 0; i < landmarks.length; i++) {
+            const p = landmarks[i];
+            const x = p.x * canvas.width, y = p.y * canvas.height;
+            ctx.fillRect(x-1.5, y-1.5, 3, 3);
+          }
+        }
+      } else {
+        // Polígonos oculares: usar los 6 indices para cada ojo
+        const left = L_OJO_IZQ.map(i => landmarks[i]);
+        const right = L_OJO_DER.map(i => landmarks[i]);
+        const earL = calcularEARFromLandmarks(left);
+        const earR = calcularEARFromLandmarks(right);
+        earVal = (earL + earR) / 2.0;
+
+        // Dibujar polígonos oculares
+        ctx.strokeStyle = '#06b6d4';
+        ctx.lineWidth = 2;
+        function dibujarPoligono(arr) {
+          ctx.beginPath();
+          ctx.moveTo(arr[0].x * canvas.width, arr[0].y * canvas.height);
+          for (let i = 1; i < arr.length; i++) ctx.lineTo(arr[i].x * canvas.width, arr[i].y * canvas.height);
+          ctx.closePath();
+          ctx.stroke();
+        }
+        dibujarPoligono(left);
+        dibujarPoligono(right);
+      }
+
+      // Update UI and buffers
+      const tSec = (performance.now()/1000);
+      earDisplay.textContent = `EAR: ${earVal.toFixed(3)}`;
+      bufferTime.push(tSec);
+      bufferEAR.push(earVal);
+      if (bufferEAR.length > maxSamples) {
+        bufferEAR.shift();
+        bufferTime.shift();
+      }
+      updateCharts(tSec, earVal);
+
+      // Detección de somnolencia (temporal)
+      if (earVal < UMBRAL_EAR) {
+        if (!tiempoInicioCierre) tiempoInicioCierre = performance.now();
+        if ((performance.now() - tiempoInicioCierre) >= TIEMPO_UMBRAL_MS) {
+          // activar alarma
+          playAlarm(DURACION_ALARMA_MS);
+        }
+      } else {
+        tiempoInicioCierre = null;
+      }
+    } else {
+      // no face detected
+      earDisplay.textContent = 'EAR: --';
+    }
+  });
+
+  /**************************************************************************
+   * Bind UI controls y lógicas
+   **************************************************************************/
+  // Bind changes
+  inputEAR.addEventListener('change', () => {
+    UMBRAL_EAR = parseFloat(inputEAR.value);
+  });
+  inputTimeAlarm.addEventListener('change', () => {
+    TIEMPO_UMBRAL_MS = parseFloat(inputTimeAlarm.value) * 1000;
+  });
+  inputAlarmDuration.addEventListener('change', () => {
+    DURACION_ALARMA_MS = parseFloat(inputAlarmDuration.value) * 1000;
+  });
+  selectLandmarkMode.addEventListener('change', () => {
+    LANDMARK_MODE = selectLandmarkMode.value;
+  });
+  chkShowPoints.addEventListener('change', () => {
+    SHOW_POINTS = chkShowPoints.checked;
+  });
+  inputFrameStep.addEventListener('change', () => {
+    const v = parseInt(inputFrameStep.value, 10);
+    FRAME_STEP = isNaN(v) || v < 1 ? 1 : v;
+  });
+  chkShowHistogram.addEventListener('change', () => {
+    SHOW_HIST = chkShowHistogram.checked;
+    document.getElementById('histogramaArea').style.display = SHOW_HIST ? 'block' : 'none';
+  });
+  selectPerf.addEventListener('change', () => {
+    applyPerfMode(selectPerf.value);
+  });
+
+  // Botones
+  btnStart.addEventListener('click', async () => {
+    // resume audio context for some browsers
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+    // aplicar modo perf inicial
+    applyPerfMode(selectPerf.value);
+    await startCameraAndProcessing();
+    btnStart.disabled = true;
+    btnStop.disabled = false;
+  });
+
+  btnStop.addEventListener('click', async () => {
+    if (camera) {
+      await camera.stop();
+      camera = null;
+    }
+    statusCamera.textContent = 'Cámara detenida';
+    btnStart.disabled = false;
+    btnStop.disabled = true;
+  });
+
+  btnSnapshot.addEventListener('click', () => {
+    const link = document.createElement('a');
+    link.download = `razr_snapshot_${Date.now()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+
+  // Estado inicial de controles
+  document.getElementById('histogramaArea').style.display = SHOW_HIST ? 'block' : 'none';
+  btnStop.disabled = true;
+
+  /**************************************************************************
+   * Inicialización: configuración sensata por defecto
+   **************************************************************************/
+  (function initDefaults(){
+    UMBRAL_EAR = parseFloat(inputEAR.value);
+    TIEMPO_UMBRAL_MS = parseFloat(inputTimeAlarm.value) * 1000;
+    DURACION_ALARMA_MS = parseFloat(inputAlarmDuration.value) * 1000;
+    FRAME_STEP = parseInt(inputFrameStep.value, 10) || 1;
+    SHOW_POINTS = chkShowPoints.checked;
+    LANDMARK_MODE = selectLandmarkMode.value;
+    SHOW_HIST = chkShowHistogram.checked;
+    applyPerfMode(selectPerf.value);
+  })();
+
+  </script>
+</body>
+</html>
