@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-RAZR - Detector de Somnolencia (versión IEEE Q1 mejorada)
-Autor: Alejandro Valentino
-Modificaciones:
- - Umbral EAR = 0.16
- - Gráfico EAR con ejes IEEE Q1 (rango 0.0–0.4)
- - Botones:
-      g → guardar histograma (Fig. 2, .jpg y .png)
-      f → guardar rostro con landmarks oculares (Fig. 1)
- - Marcado ocular con puntos rojos
+RAZR - Detector de Somnolencia
+Autor: Alejandro Seminario
 """
 
 from scipy.spatial import distance as dist
