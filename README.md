@@ -49,21 +49,6 @@ entorno virtual, por ejemplo:
 
 Una vez activado el entorno virtual, instala los paquetes necesarios:
 
-    pip install mediapipe==0.10.21             opencv-python==4.9.0.80             imutils==0.5.4             simpleaudio==1.0.4             matplotlib==3.10.1             scipy==1.15.2             numpy==1.26.4
-
-O si prefieres, crea un archivo requirements.txt con el siguiente
-contenido:
-
-    mediapipe==0.10.21
-    opencv-python==4.9.0.80
-    imutils==0.5.4
-    simpleaudio==1.0.4
-    matplotlib==3.10.1
-    scipy==1.15.2
-    numpy==1.26.4
-
-Y ejecuta:
-
     pip install -r requirements.txt
 
 <h2>5. Ejecutar el script razr.py</h2>
