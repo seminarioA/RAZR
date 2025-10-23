@@ -89,39 +89,13 @@ Argumentos opcionales
                       imágenes               
   ------------------------------------------------------------------------
 
-<h2>6. Controles en ejecución</h2>
-
-  Tecla   Acción
-  ------- --------------------------------------------------------
-  f       Guarda el rostro con los landmarks oculares (Figura 1)
-  g       Guarda el histograma EAR (Figura 2, .png y .jpg)
-  q       Finaliza la ejecución y cierra ventanas
-
-<h2>7. Resultados generados</h2>
-
-Durante la ejecución, se crean los siguientes archivos en la carpeta
-results/:
-
-  --------------------------------------------------------------------------
-  Archivo                           Descripción
-  --------------------------------- ----------------------------------------
-  fig1_rostro_EAR.png               Captura del rostro con puntos oculares
-                                    (Fig. 1 IEEE Q1)
-
-  fig2_histograma_EAR.png / .jpg    Gráfico temporal del EAR (Fig. 2 IEEE
-                                    Q1)
-
-  metrics_run_YYYYMMDD_HHMMSS.csv   Registro de métricas por frame (EAR,
-                                    latencia, estado de alarma)
-  --------------------------------------------------------------------------
-
-<h2>8. Desactivar el entorno virtual</h2>
+<h2>6. Desactivar el entorno virtual</h2>
 
 Cuando termines de trabajar, puedes salir del entorno virtual con:
 
     deactivate
 
-<h2>9. Verificación</h2>
+<h2>7. Verificación</h2>
 
 Para comprobar que las dependencias se instalaron correctamente:
 
