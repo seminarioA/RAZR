@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RAZR</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+  <!-- ============================================================
+       HEADER
+  ============================================================ -->
+  <header class="bg-gray-900">
+    <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-3 lg:px-3">
+      <div class="flex lg:flex-1">
+        <a href="#" class="-m-1.5 p-1.5">
+          <span class="sr-only">Your Company</span>
+          <a href="#" class="h-8 w-8">🐧</a>
+        </a>
+      </div>
+      <el-popover-group class="lg:flex lg:gap-x-12">
+        <a href="#" class="text-sm/6 font-semibold text-white">Home</a>
+        <a href="#" class="text-sm/6 font-semibold text-white">Info</a>
+        <a href="#" class="text-sm/6 font-semibold text-white">Docs</a>
+      </el-popover-group>
+      <div class="lg:flex lg:flex-1 lg:justify-end">
+        <a href="#" class="text-sm/6 font-semibold text-white">Log in <span aria-hidden="true">&rarr;</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <div
+    class="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-800/50 px-6 py-2.5 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10 sm:px-3.5 sm:before:flex-1">
+    <div aria-hidden="true"
+      class="absolute top-1/2 left-[max(-7rem,calc(50%-52rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
+        class="aspect-577/310 w-144.25 bg-linear-to-r from-[#ff80b5] to-[#9089fc] opacity-40"></div>
+    </div>
+    <div aria-hidden="true"
+      class="absolute top-1/2 left-[max(45rem,calc(50%+8rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
+      <div
+        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
+        class="aspect-577/310 w-144.25 bg-linear-to-r from-[#ff80b5] to-[#9089fc] opacity-40"></div>
+    </div>
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
+      <p class="text-sm/6 text-gray-100">
+        <strong class="font-semibold">Version 0.1</strong><svg viewBox="0 0 2 2" aria-hidden="true"
+          class="mx-2 inline size-0.5 fill-current">
+          <circle r="1" cx="1" cy="1" />
+        </svg>25/10/2025
+      </p>
+      <a href="#"
+        class="flex-none rounded-full bg-white/10 px-3.5 py-1 text-sm font-semibold text-white shadow-xs inset-ring-white/20 hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Ver
+        <span aria-hidden="true">&rarr;</span></a>
+    </div>
+    <div class="flex flex-1 justify-end">
+      <button type="button" class="-m-3 p-3 focus-visible:-outline-offset-4">
+        <span class="sr-only">Dismiss</span>
+        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-gray-100">
+          <path
+            d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+     SECCIÓN DE STREAM + GRÁFICO
+============================================================ -->
+  <main class="flex flex-col items-center justify-center px-4 py-6 space-y-6">
+
+    <!-- Video -->
+    <div class="w-full max-w-4xl relative rounded-lg overflow-hidden border border-gray-700 shadow-md">
+      <div id="placeholder" role="status"
+        class="absolute inset-0 flex items-center justify-center bg-gray-800 animate-pulse z-10">
+        <svg class="w-10 h-10 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+          <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+          <path
+            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z" />
+        </svg>
+      </div>
+
+      <video id="videoStream" autoplay muted playsinline
+        class="w-full aspect-video object-cover transition-opacity duration-500 opacity-0"></video>
+
+      <!-- EAR overlay -->
+      <div id="earOverlay"
+        class="absolute bottom-4 right-4 bg-gray-800/70 backdrop-blur-md text-yellow-300 px-4 py-2 rounded-lg text-sm font-mono shadow-md hidden">
+        EAR: <span id="earValue">0.000</span>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="flex items-center justify-center gap-4 mt-4 bg-gray-800/40 p-2 rounded-xl backdrop-blur-md border border-gray-700">
+      <button data-mode="poligonos"
+        class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600/70 hover:bg-blue-600 focus:ring-2 focus:ring-blue-400">Polígonos</button>
+      <button data-mode="puntos"
+        class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60 hover:bg-gray-600 focus:ring-2 focus:ring-blue-400">Puntos</button>
+      <button data-mode="crudo"
+        class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60 hover:bg-gray-600 focus:ring-2 focus:ring-blue-400">Crudo</button>
+    </div>
+
+    <!-- Gráfico -->
+    <div id="chartContainer" class="w-full max-w-4xl relative border border-gray-700 rounded-lg shadow-md p-3">
+      <div id="chartPlaceholder" role="status"
+        class="absolute inset-0 flex items-center justify-center bg-gray-800 animate-pulse z-10">
+        <svg class="w-8 h-8 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+          <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+          <path
+            d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z" />
+        </svg>
+      </div>
+      <canvas id="earChart" class="h-32"></canvas>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
+    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
+      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 Los Andes Labs. All Rights Reserved.</span>
+    </div>
+  </footer>
+
+  <!-- === librerías mediapipe === -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+  <script>
+    const videoOut = document.getElementById("videoStream");
+    const earOverlay = document.getElementById("earOverlay");
+    const earValue = document.getElementById("earValue");
+    const placeholder = document.getElementById("placeholder");
+    const chartPlaceholder = document.getElementById("chartPlaceholder");
+
+    const MAX_POINTS = 100;
+    const ctx = document.getElementById("earChart").getContext("2d");
+    const chart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: [],
+        datasets: [
+          { label: "EAR", data: [], borderColor: "rgba(59,130,246,1)", backgroundColor: "rgba(59,130,246,0.2)", borderWidth: 2, tension: 0.25, pointRadius: 0, fill: true },
+          { label: "Umbral (0.16)", data: [], borderColor: "rgba(239,68,68,0.8)", borderDash: [5, 5], borderWidth: 1.5, pointRadius: 0 }
+        ],
+      },
+      options: {
+        responsive: true,
+        animation: false,
+        scales: {
+          x: { type: "time", time: { unit: "second" }, ticks: { color: "#d4d4d4" }, grid: { color: "rgba(255,255,255,0.05)" } },
+          y: { min: 0.0, max: 0.4, ticks: { color: "#d4d4d4" }, grid: { color: "rgba(255,255,255,0.05)" } },
+        },
+        plugins: { legend: { labels: { color: "#f3f4f6" } } },
+      },
+    });
+
+    function pushToChart(ear, threshold = 0.16) {
+      const t = new Date();
+      chart.data.labels.push(t);
+      chart.data.datasets[0].data.push(ear);
+      chart.data.datasets[1].data.push(threshold);
+      if (chart.data.labels.length > MAX_POINTS) {
+        chart.data.labels.shift();
+        chart.data.datasets[0].data.shift();
+        chart.data.datasets[1].data.shift();
+      }
+      chart.update("none");
+    }
+
+    function calcularEAR(ojo) {
+      const dist = (i, j) => Math.hypot(ojo[i].x - ojo[j].x, ojo[i].y - ojo[j].y);
+      const A = dist(1, 5), B = dist(2, 4), C = dist(0, 3);
+      return C ? (A + B) / (2.0 * C) : 0;
+    }
+
+    const displayCanvas = document.createElement("canvas");
+    const dctx = displayCanvas.getContext("2d", { alpha: false });
+    let firstDraw = false;
+    let modoVisual = "poligonos";
+
+    // Botones modo visual
+    document.querySelectorAll(".modo-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("bg-blue-600/70"));
+        btn.classList.add("bg-blue-600/70");
+        modoVisual = btn.dataset.mode;
+      });
+    });
+
+    const indicesOjoIzq = [33, 160, 158, 133, 153, 144];
+    const indicesOjoDer = [362, 385, 387, 263, 373, 380];
+
+    const faceMesh = new FaceMesh({
+      locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`,
+    });
+    faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+
+    faceMesh.onResults(results => {
+      if (!results.multiFaceLandmarks?.length) return;
+      const img = results.image;
+      if (!firstDraw) {
+        displayCanvas.width = img.width;
+        displayCanvas.height = img.height;
+        videoOut.srcObject = displayCanvas.captureStream(30);
+        placeholder.classList.add("hidden");
+        chartPlaceholder.classList.add("hidden");
+        earOverlay.classList.remove("hidden");
+        videoOut.style.opacity = 1;
+        firstDraw = true;
+      }
+
+      dctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+      dctx.drawImage(img, 0, 0, displayCanvas.width, displayCanvas.height);
+
+      const lm = results.multiFaceLandmarks[0];
+
+      if (modoVisual === "poligonos") {
+        drawConnectors(dctx, lm, FACEMESH_LEFT_EYE, { color: "#00ffff", lineWidth: 1.5 });
+        drawConnectors(dctx, lm, FACEMESH_RIGHT_EYE, { color: "#00ffff", lineWidth: 1.5 });
+      } else if (modoVisual === "puntos") {
+        dctx.fillStyle = "#ff0055";
+        [...indicesOjoIzq, ...indicesOjoDer].forEach(i => {
+          const p = lm[i];
+          const x = p.x * displayCanvas.width, y = p.y * displayCanvas.height;
+          dctx.beginPath(); dctx.arc(x, y, 3, 0, 2 * Math.PI); dctx.fill();
+        });
+      }
+
+      const toPx = p => ({ x: p.x * displayCanvas.width, y: p.y * displayCanvas.height });
+      const ojoIzq = indicesOjoIzq.map(i => toPx(lm[i]));
+      const ojoDer = indicesOjoDer.map(i => toPx(lm[i]));
+      const earProm = (calcularEAR(ojoIzq) + calcularEAR(ojoDer)) / 2.0;
+
+      earValue.textContent = earProm.toFixed(3);
+      pushToChart(earProm, 0.16);
+    });
+
+    const inputVideo = document.createElement("video");
+    inputVideo.muted = true; inputVideo.playsInline = true;
+    const camera = new Camera(inputVideo, {
+      onFrame: async () => await faceMesh.send({ image: inputVideo }),
+      width: 640, height: 480,
+    });
+    camera.start().catch(err => console.error("Error al iniciar cámara:", err));
+  </script>
+</body>
+</html>
