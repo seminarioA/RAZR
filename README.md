@@ -1,8 +1,13 @@
-RAZR - Detector de Somnolencia
+<h1 align="center">RAZR: Monitor de Somnolencia</h1>
 
-Sistema de visión computacional para la detección autónoma de
-somnolencia en tiempo real mediante el Eye Aspect Ratio (EAR) y
-MediaPipe Face Mesh.
+### ¿Deseas probarlo? [Entra a la web](https://seminarioa.github.io/RAZR/)
+
+<h2>¿Que es RAZR?</h2>
+
+RAZR es un sistema que permite el monitoreo autónomo de
+somnolencia en tiempo real.
+
+<h2>¿Como usar RAZR de manera local?</h2>
 Este documento describe los pasos para configurar el entorno, instalar
 dependencias y ejecutar el script razr.py.
 
