@@ -4,71 +4,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RAZR</title>
+  <title>RAZR - Detector de Somnolencia</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
 </head>
 
 <body class="bg-gray-900 text-gray-100 min-h-screen">
-  <header class="bg-gray-900">
+
+  <header class="bg-gray-900 border-b border-gray-800">
     <nav aria-label="Global" class="mx-auto flex max-w-7xl items-center justify-between p-3 lg:px-3">
       <div class="flex lg:flex-1">
-        <a href="#" class="-m-1.5 p-1.5">
-          <span class="sr-only">Los Andes Labs</span>
-          <a href="#" class="h-8 w-8">🐧</a>
-        </a>
+        <a href="#" class="-m-1.5 p-1.5 text-xl font-semibold text-blue-400">🐧 RAZR</a>
       </div>
-      <el-popover-group class="lg:flex lg:gap-x-12">
-        <a href="#" class="text-sm/6 font-semibold text-white">Home</a>
-        <a href="#" class="text-sm/6 font-semibold text-white">Info</a>
-        <a href="#" class="text-sm/6 font-semibold text-white">Docs</a>
-      </el-popover-group>
+      <div class="lg:flex lg:gap-x-12">
+        <a href="#" class="text-sm font-semibold text-white">Inicio</a>
+        <a href="#" class="text-sm font-semibold text-white">Info</a>
+        <a href="#" class="text-sm font-semibold text-white">Documentación</a>
+      </div>
       <div class="lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" class="text-sm/6 font-semibold text-white">Log in <span aria-hidden="true">&rarr;</span></a>
+        <a href="#" class="text-sm font-semibold text-white">Login <span aria-hidden="true">&rarr;</span></a>
       </div>
     </nav>
   </header>
 
-  <div
-    class="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-800/50 px-6 py-2.5 after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10 sm:px-3.5 sm:before:flex-1">
-    <div aria-hidden="true"
-      class="absolute top-1/2 left-[max(-7rem,calc(50%-52rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
-      <div
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-        class="aspect-577/310 w-144.25 bg-linear-to-r from-[#ff80b5] to-[#9089fc] opacity-40"></div>
-    </div>
-    <div aria-hidden="true"
-      class="absolute top-1/2 left-[max(45rem,calc(50%+8rem))] -z-10 -translate-y-1/2 transform-gpu blur-2xl">
-      <div
-        style="clip-path: polygon(74.8% 41.9%, 97.2% 73.2%, 100% 34.9%, 92.5% 0.4%, 87.5% 0%, 75% 28.6%, 58.5% 54.6%, 50.1% 56.8%, 46.9% 44%, 48.3% 17.4%, 24.7% 53.9%, 0% 27.9%, 11.9% 74.2%, 24.9% 54.1%, 68.6% 100%, 74.8% 41.9%)"
-        class="aspect-577/310 w-144.25 bg-linear-to-r from-[#ff80b5] to-[#9089fc] opacity-40"></div>
-    </div>
-    <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-      <p class="text-sm/6 text-gray-100">
-        <strong class="font-semibold">Version 0.1</strong><svg viewBox="0 0 2 2" aria-hidden="true"
-          class="mx-2 inline size-0.5 fill-current">
-          <circle r="1" cx="1" cy="1" />
-        </svg>25/10/25
-      </p>
-      <a href="#"
-        class="flex-none rounded-full bg-white/10 px-3.5 py-1 text-sm font-semibold text-white shadow-xs inset-ring-white/20 hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">Ver
-        <span aria-hidden="true">&rarr;</span></a>
-    </div>
-    <div class="flex flex-1 justify-end">
-      <button type="button" class="-m-3 p-3 focus-visible:-outline-offset-4">
-        <span class="sr-only">Dismiss</span>
-        <svg viewBox="0 0 20 20" fill="currentColor" data-slot="icon" aria-hidden="true" class="size-5 text-gray-100">
-          <path
-            d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
-        </svg>
-      </button>
-    </div>
-  </div>
-
   <main class="flex flex-col items-center justify-center px-4 py-6 space-y-6">
-    <!-- Video -->
     <div class="w-full max-w-4xl relative rounded-lg overflow-hidden border border-gray-700 shadow-md">
       <div id="placeholder" role="status"
         class="absolute inset-0 flex items-center justify-center bg-gray-800 animate-pulse z-10">
@@ -78,229 +40,281 @@
             d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2Z" />
         </svg>
       </div>
+
       <video id="videoStream" autoplay muted playsinline
-        class="w-full object-contain transition-opacity duration-500 opacity-0"></video>
+        class="w-full object-contain transition-opacity duration-500 opacity-0 scale-x-[-1]"></video>
 
       <div id="earOverlay"
-        class="absolute bottom-4 right-4 bg-gray-800/70 backdrop-blur-md text-yellow-300 px-4 py-2 rounded-lg text-sm font-mono shadow-md hidden">
+        class="absolute bottom-4 right-4 bg-gray-900/80 backdrop-blur-lg border border-gray-600 text-green-400 px-5 py-3 rounded-xl text-lg font-mono shadow-lg hidden transition-all duration-300">
         EAR: <span id="earValue">0.000</span>
       </div>
     </div>
 
-    <!-- Ajustes -->
     <section class="w-full max-w-4xl mt-2 bg-gray-800/40 p-4 rounded-xl backdrop-blur-md border border-gray-700">
-      <h2 class="text-center text-sm font-semibold text-gray-300 mb-3 uppercase tracking-widest">Ajustes / Más ajustes
-      </h2>
-
-      <div class="flex flex-wrap items-center justify-center gap-4">
-        <!-- Modos -->
-        <div class="flex gap-2">
-          <button data-mode="poligonos"
-            class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600/70">Polígonos</button>
-          <button data-mode="puntos"
-            class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60">Puntos</button>
-          <button data-mode="crudo"
-            class="modo-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60">Crudo</button>
+      <div class="flex flex-wrap justify-center gap-6">
+        <div>
+          <button id="dropdownModoBtn" data-dropdown-toggle="dropdownModo"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+            Modo de Visualización
+            <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
+            </svg>
+          </button>
+          <div id="dropdownModo"
+            class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input id="modo-poligonos"
+                    type="radio" name="modo" value="poligonos" class="w-4 h-4 text-blue-600" checked><label
+                    for="modo-poligonos" class="ms-2 text-sm font-medium dark:text-gray-300">Polígonos</label></div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input id="modo-puntos"
+                    type="radio" name="modo" value="puntos" class="w-4 h-4 text-blue-600"><label for="modo-puntos"
+                    class="ms-2 text-sm font-medium dark:text-gray-300">Puntos</label></div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input id="modo-crudo"
+                    type="radio" name="modo" value="crudo" class="w-4 h-4 text-blue-600"><label for="modo-crudo"
+                    class="ms-2 text-sm font-medium dark:text-gray-300">Crudo</label></div>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <!-- Calidades -->
-        <div class="flex gap-2">
-          <button data-quality="240"
-            class="calidad-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60">240p</button>
-          <button data-quality="480"
-            class="calidad-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-blue-600/70">480p</button>
-          <button data-quality="720"
-            class="calidad-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60">720p</button>
-          <button data-quality="1080"
-            class="calidad-btn px-4 py-2 rounded-lg text-sm font-medium text-white bg-gray-700/60">1080p</button>
+        <div>
+          <button id="dropdownCalidadBtn" data-dropdown-toggle="dropdownCalidad"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 inline-flex items-center">
+            Calidad de Video
+            <svg class="w-2.5 h-2.5 ms-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 4 4 4-4" />
+            </svg>
+          </button>
+          <div id="dropdownCalidad"
+            class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow-sm dark:bg-gray-700 dark:divide-gray-600">
+            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200">
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input type="radio"
+                    id="q240" name="calidad" value="240" class="w-4 h-4 text-blue-600" /><label for="q240"
+                    class="ms-2">240p</label></div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input type="radio"
+                    id="q480" name="calidad" value="480" checked class="w-4 h-4 text-blue-600" /><label for="q480"
+                    class="ms-2">480p</label></div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input type="radio"
+                    id="q720" name="calidad" value="720" class="w-4 h-4 text-blue-600" /><label for="q720"
+                    class="ms-2">720p</label></div>
+              </li>
+              <li>
+                <div class="flex items-center p-2 hover:bg-gray-100 dark:hover:bg-gray-600"><input type="radio"
+                    id="q1080" name="calidad" value="1080" class="w-4 h-4 text-blue-600" /><label for="q1080"
+                    class="ms-2">1080p</label></div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <p id="resInfo" class="text-center text-xs text-gray-400 mt-3"></p>
     </section>
 
-    <!-- Gráfico -->
     <div id="chartContainer" class="w-full max-w-4xl relative border border-gray-700 rounded-lg shadow-md p-3">
       <canvas id="earChart" class="h-32"></canvas>
     </div>
   </main>
 
-  <footer class="bg-white rounded-lg shadow-sm m-4 dark:bg-gray-800">
-    <div class="w-full mx-auto max-w-screen-xl p-4 md:flex md:items-center md:justify-between">
-      <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2025 Los Andes Labs. All Rights
-        Reserved.</span>
+  <footer class="bg-gray-800 border-t border-gray-700 mt-6">
+    <div class="w-full mx-auto max-w-screen-xl p-4 flex items-center justify-between text-sm text-gray-400">
+      <span>© 2025 Los Andes Labs. Todos los derechos reservados.</span>
+      <span>Versión 0.2</span>
     </div>
   </footer>
+
+  <!-- === MODAL DE PERMISO DE AUDIO === -->
+  <div id="audioModal" tabindex="-1" hidden
+    class="fixed top-0 left-0 right-0 z-50 w-full p-4 overflow-x-hidden overflow-y-auto h-full bg-black/60 backdrop-blur-sm">
+    <div class="relative w-full max-w-md mx-auto mt-32">
+      <div class="relative bg-gray-800 rounded-lg shadow-lg border border-gray-700">
+        <div class="p-6 text-center">
+          <h3 class="mb-5 text-lg font-semibold text-white">Permitir audio de alertas</h3>
+          <p class="mb-4 text-gray-400 text-sm">El sistema requiere permiso para reproducir sonidos de alerta ante
+            somnolencia.</p>
+          <button id="audioAllowBtn"
+            class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5">
+            Permitir audio
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 
   <script>
-    const videoOut = document.getElementById("videoStream");
-    const earOverlay = document.getElementById("earOverlay");
-    const earValue = document.getElementById("earValue");
-    const placeholder = document.getElementById("placeholder");
-    const resInfo = document.getElementById("resInfo");
+    document.addEventListener("DOMContentLoaded", async () => {
+      const videoOut = document.getElementById("videoStream");
+      const earOverlay = document.getElementById("earOverlay");
+      const earValue = document.getElementById("earValue");
+      const placeholder = document.getElementById("placeholder");
+      const resInfo = document.getElementById("resInfo");
+      const modal = document.getElementById("audioModal");
+      const audioBtn = document.getElementById("audioAllowBtn");
 
-    let camera = null;
-    let firstDraw = false;
-    let modoVisual = "poligonos";
-    let selectedQuality = "480";
-    let aspectRatio = 4 / 3;
+      let modoVisual = "puntos";
+      let selectedQuality = "480";
+      let aspectRatio = 4 / 3;
+      let camera = null;
+      let firstDraw = false;
+      let fps = 30;
 
-    // === Detectar relación de aspecto nativa ===
-    async function detectarAspecto() {
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        const track = stream.getVideoTracks()[0];
-        const settings = track.getSettings();
-        if (settings.width && settings.height) aspectRatio = settings.width / settings.height;
-        resInfo.textContent = `Relación detectada: ${aspectRatio.toFixed(3)} (${settings.width}x${settings.height})`;
-        track.stop();
-      } catch {
-        resInfo.textContent = "No se pudo detectar la relación de aspecto.";
-      }
-    }
-    detectarAspecto();
+      const UMBRAL_EAR = 0.16;
+      let TIEMPO_ALERTA_MS = 1500;
+      let tiempoInferior = null;
+      let alarmaActiva = false;
 
-    // === Chart EAR ===
-    const ctx = document.getElementById("earChart").getContext("2d");
-    const chart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [],
-        datasets: [
-          { label: "EAR", data: [], borderColor: "rgba(59,130,246,1)", backgroundColor: "rgba(59,130,246,0.2)", borderWidth: 2, tension: 0.25, pointRadius: 0, fill: true },
-          { label: "Umbral (0.16)", data: [], borderColor: "rgba(239,68,68,0.8)", borderDash: [5, 5], borderWidth: 1.5, pointRadius: 0 }
-        ]
-      },
-      options: {
-        animation: false,
-        responsive: true,
-        scales: {
-          y: { min: 0, max: 0.4, ticks: { color: "#ccc" } },
-          x: { type: "time", time: { unit: "second" }, ticks: { color: "#ccc" } }
+      const beep = new Audio();
+      beep.src = "alarm.mp3";
+      beep.preload = "auto";
+      beep.load();
+
+      async function solicitarPermisoAudio() {
+        try {
+          await beep.play();
+          beep.pause();
+          beep.currentTime = 0;
+        } catch {
+          modal.removeAttribute("hidden");
+          audioBtn.addEventListener("click", async () => {
+            try {
+              await beep.play();
+              beep.pause();
+              beep.currentTime = 0;
+            } catch (err) {
+              console.warn("⚠️ Error al reproducir audio:", err);
+            }
+            modal.setAttribute("hidden", "true");
+          });
         }
       }
-    });
+      await solicitarPermisoAudio();
 
-    const MAX_POINTS = 100;
-    function pushToChart(ear) {
-      const t = new Date();
-      chart.data.labels.push(t);
-      chart.data.datasets[0].data.push(ear);
-      chart.data.datasets[1].data.push(0.16);
-      if (chart.data.labels.length > MAX_POINTS) {
-        chart.data.labels.shift();
-        chart.data.datasets[0].data.shift();
-        chart.data.datasets[1].data.shift();
+      async function detectarAspectoYFPS() {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+          const track = stream.getVideoTracks()[0];
+          const s = track.getSettings();
+          if (s.width && s.height) aspectRatio = s.width / s.height;
+          fps = s.frameRate ? Math.min(s.frameRate, 60) : 30;
+          resInfo.textContent = `Relación: ${aspectRatio.toFixed(2)} | ${s.width}x${s.height} @${fps.toFixed(0)}fps`;
+          track.stop();
+        } catch {
+          resInfo.textContent = "No se pudo detectar la cámara.";
+        }
       }
-      chart.update("none");
-    }
+      await detectarAspectoYFPS();
 
-    function calcularEAR(ojo) {
-      const dist = (i, j) => Math.hypot(ojo[i].x - ojo[j].x, ojo[i].y - ojo[j].y);
-      const A = dist(1, 5), B = dist(2, 4), C = dist(0, 3);
-      return C ? (A + B) / (2.0 * C) : 0;
-    }
-
-    // === FaceMesh ===
-    const displayCanvas = document.createElement("canvas");
-    const dctx = displayCanvas.getContext("2d", { alpha: false });
-    const faceMesh = new FaceMesh({
-      locateFile: f => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`
-    });
-    faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true });
-
-    const indicesOjoIzq = [33, 160, 158, 133, 153, 144];
-    const indicesOjoDer = [362, 385, 387, 263, 373, 380];
-
-    faceMesh.onResults(results => {
-      if (!results.multiFaceLandmarks?.length) return;
-      const img = results.image;
-      if (!firstDraw) {
-        displayCanvas.width = img.width;
-        displayCanvas.height = img.height;
-        videoOut.srcObject = displayCanvas.captureStream(30);
-        placeholder.classList.add("hidden");
-        earOverlay.classList.remove("hidden");
-        videoOut.style.opacity = 1;
-        firstDraw = true;
-      }
-
-      dctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
-      dctx.drawImage(img, 0, 0, displayCanvas.width, displayCanvas.height);
-
-      const lm = results.multiFaceLandmarks[0];
-      if (modoVisual === "poligonos") {
-        drawConnectors(dctx, lm, FACEMESH_LEFT_EYE, { color: "#00ffff", lineWidth: 1.5 });
-        drawConnectors(dctx, lm, FACEMESH_RIGHT_EYE, { color: "#00ffff", lineWidth: 1.5 });
-      } else if (modoVisual === "puntos") {
-        dctx.fillStyle = "#ff0055";
-        [...indicesOjoIzq, ...indicesOjoDer].forEach(i => {
-          const p = lm[i];
-          dctx.beginPath();
-          dctx.arc(p.x * displayCanvas.width, p.y * displayCanvas.height, 3, 0, 2 * Math.PI);
-          dctx.fill();
-        });
-      }
-
-      const toPx = p => ({ x: p.x * displayCanvas.width, y: p.y * displayCanvas.height });
-      const ojoIzq = indicesOjoIzq.map(i => toPx(lm[i]));
-      const ojoDer = indicesOjoDer.map(i => toPx(lm[i]));
-      const earProm = (calcularEAR(ojoIzq) + calcularEAR(ojoDer)) / 2.0;
-
-      earValue.textContent = earProm.toFixed(3);
-      pushToChart(earProm);
-    });
-
-    // === Calcular dimensiones con relación de aspecto ===
-    function calcularDimensiones(quality) {
-      let width;
-      switch (quality) {
-        case "240": width = 426; break;
-        case "480": width = 854; break;
-        case "720": width = 1280; break;
-        case "1080": width = 1920; break;
-        default: width = 640;
-      }
-      const height = Math.round(width / aspectRatio);
-      return { width, height };
-    }
-
-    function reiniciarCamara() {
-      if (camera) camera.stop();
-      const inputVideo = document.createElement("video");
-      inputVideo.muted = true; inputVideo.playsInline = true;
-
-      const { width, height } = calcularDimensiones(selectedQuality);
-      camera = new Camera(inputVideo, {
-        onFrame: async () => await faceMesh.send({ image: inputVideo }),
-        width, height
+      const ctx = document.getElementById("earChart").getContext("2d");
+      const MAX_POINTS = 100;
+      const chart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [], datasets: [
+            { label: "EAR", data: [], borderColor: "#3b82f6", backgroundColor: "rgba(59,130,246,0.25)", fill: true, tension: 0.3 },
+            { label: "Umbral (0.16)", data: [], borderColor: "#ef4444", borderDash: [5, 5], fill: false }
+          ]
+        },
+        options: {
+          responsive: true,
+          animation: { duration: 600, easing: "easeInOutSine", onProgress: (a) => { const p = a.currentStep / a.numSteps; ctx.canvas.style.transform = `translateY(${Math.sin(p * Math.PI * 2) * 6}px)`; }, onComplete: () => ctx.canvas.style.transform = "translateY(0px)" },
+          scales: { x: { type: "time", time: { unit: "second" }, ticks: { color: "#d4d4d4" }, grid: { color: "rgba(255,255,255,0.05)" } }, y: { min: 0, max: 0.4, ticks: { color: "#d4d4d4" }, grid: { color: "rgba(255,255,255,0.05)" } } }, plugins: { legend: { labels: { color: "#f3f4f6" } } }
+        }
       });
-      camera.start().then(() => {
-        resInfo.textContent = `Calidad actual: ${width}x${height} (aspecto ${aspectRatio.toFixed(3)})`;
-      }).catch(err => console.error("Error cámara:", err));
-    }
 
-    document.querySelectorAll(".modo-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".modo-btn").forEach(b => b.classList.remove("bg-blue-600/70"));
-        btn.classList.add("bg-blue-600/70");
-        modoVisual = btn.dataset.mode;
-      });
-    });
-    document.querySelectorAll(".calidad-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".calidad-btn").forEach(b => b.classList.remove("bg-blue-600/70"));
-        btn.classList.add("bg-blue-600/70");
-        selectedQuality = btn.dataset.quality;
-        reiniciarCamara();
-      });
-    });
+      function pushToChart(ear) { const t = new Date(); chart.data.labels.push(t); chart.data.datasets[0].data.push(ear); chart.data.datasets[1].data.push(UMBRAL_EAR); if (chart.data.labels.length > MAX_POINTS) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); chart.data.datasets[1].data.shift(); } chart.update("none"); }
 
-    reiniciarCamara();
+      function calcularEAR(ojo) { const d = (i, j) => Math.hypot(ojo[i].x - ojo[j].x, ojo[i].y - ojo[j].y); const A = d(1, 5), B = d(2, 4), C = d(0, 3); return C ? (A + B) / (2.0 * C) : 0; }
+
+      const displayCanvas = document.createElement("canvas");
+      const dctx = displayCanvas.getContext("2d", { alpha: false });
+
+      const faceMesh = new FaceMesh({ locateFile: (f) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}` });
+      faceMesh.setOptions({ maxNumFaces: 1, refineLandmarks: true });
+
+      const indicesOjoIzq = [33, 160, 158, 133, 153, 144];
+      const indicesOjoDer = [362, 385, 387, 263, 373, 380];
+
+      faceMesh.onResults((results) => {
+        if (!results.multiFaceLandmarks?.length) return;
+        const img = results.image;
+        if (!firstDraw) { displayCanvas.width = img.width; displayCanvas.height = img.height; videoOut.srcObject = displayCanvas.captureStream(fps); placeholder.classList.add("hidden"); earOverlay.classList.remove("hidden"); videoOut.style.opacity = 1; firstDraw = true; }
+
+        dctx.save();
+        dctx.scale(-1, 1);
+        dctx.translate(-displayCanvas.width, 0);
+        dctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+        dctx.drawImage(img, 0, 0, displayCanvas.width, displayCanvas.height);
+
+        const lm = results.multiFaceLandmarks[0];
+        if (modoVisual === "poligonos") { drawConnectors(dctx, lm, FACEMESH_LEFT_EYE, { color: "#00ffff", lineWidth: 1.5 }); drawConnectors(dctx, lm, FACEMESH_RIGHT_EYE, { color: "#00ffff", lineWidth: 1.5 }); }
+        else if (modoVisual === "puntos") { dctx.fillStyle = "#ff0055";[...indicesOjoIzq, ...indicesOjoDer].forEach((i) => { const p = lm[i]; dctx.beginPath(); dctx.arc(p.x * displayCanvas.width, p.y * displayCanvas.height, 3, 0, 2 * Math.PI); dctx.fill(); }); }
+        dctx.restore();
+
+        const toPx = (p) => ({ x: (1 - p.x) * displayCanvas.width, y: p.y * displayCanvas.height });
+        const ojoIzq = indicesOjoIzq.map((i) => toPx(lm[i]));
+        const ojoDer = indicesOjoDer.map((i) => toPx(lm[i]));
+        const earProm = (calcularEAR(ojoIzq) + calcularEAR(ojoDer)) / 2.0;
+
+        earValue.textContent = earProm.toFixed(3);
+        pushToChart(earProm);
+
+        if (earProm < UMBRAL_EAR) {
+          if (!tiempoInferior) tiempoInferior = Date.now();
+          const dur = Date.now() - tiempoInferior;
+          earOverlay.classList.remove("text-green-400");
+          earOverlay.classList.add("text-red-500", "border-red-500");
+          if (!alarmaActiva && dur >= TIEMPO_ALERTA_MS) {
+            alarmaActiva = true;
+            setTimeout(() => {
+              beep.currentTime = 0;
+              beep.play().catch(err => console.warn("⚠️ Error al reproducir audio:", err));
+              // ⏱️ detener tras 5 s sin importar la longitud real
+              setTimeout(() => {
+                beep.pause();
+                beep.currentTime = 0;
+              }, 3000);
+            }, 100);
+          }
+        } else {
+          tiempoInferior = null; alarmaActiva = false;
+          earOverlay.classList.remove("text-red-500", "border-red-500");
+          earOverlay.classList.add("text-green-400");
+        }
+      });
+
+      function calcularDimensiones(q) { const res = { "240": 426, "480": 854, "720": 1280, "1080": 1920 }; const w = res[q] || 640; const h = Math.round(w / aspectRatio); return { width: w, height: h }; }
+
+      function reiniciarCamara() {
+        if (camera) camera.stop();
+        const { width, height } = calcularDimensiones(selectedQuality);
+        const inputVideo = document.createElement("video");
+        inputVideo.muted = true; inputVideo.playsInline = true;
+        camera = new Camera(inputVideo, { onFrame: async () => await faceMesh.send({ image: inputVideo }), width, height });
+        camera.start();
+        displayCanvas.width = width; displayCanvas.height = height;
+        resInfo.textContent = `Calidad: ${width}x${height} | ${fps.toFixed(0)}fps`;
+      }
+
+      document.querySelectorAll("input[name='modo']").forEach((r) => r.addEventListener("change", () => modoVisual = r.value));
+      document.querySelectorAll("input[name='calidad']").forEach((r) => r.addEventListener("change", () => { selectedQuality = r.value; reiniciarCamara(); }));
+      reiniciarCamara();
+    });
   </script>
 </body>
 
